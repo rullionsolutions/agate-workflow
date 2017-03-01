@@ -1,6 +1,7 @@
 "use strict";
 
 var Core = require("lapis-core/index.js");
+var Data = require("lazuli-data/index.js");
 var UI = require("lazuli-ui/index.js");
 
 UI.sections.add(require("agate-workflow/WorkflowNode.js"));
@@ -18,7 +19,7 @@ require("agate-workflow/wf_inst/ac_wf_inst_unfreeze.js");
 
 exports.sections = Core.Collection.clone({
     id: "wf_templates",
-    item_type: exports.Section,
+    item_type: Data.entities.get("ac_wf_inst"),
 });
 
 require("agate-workflow/wf_inst_node/ac_wf_inst_node.js");

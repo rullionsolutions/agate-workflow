@@ -42,6 +42,12 @@ module.exports.addFields([
 module.exports.define("indexes", [ "wf_tmpl, created_at" ]);
 
 
+module.exports.override("clone", function (spec) {
+    spec.skip_registration = true;        // prevents DESCENDANTS from being added to Collection.entities
+    return Data.Entity.clone.call(this, spec);
+});
+
+
 module.exports.defbind("cloneNodesActors", "cloneType", function () {
     this.nodes = this.parent.nodes.clone({ id: "ac_wf_inst.nodes" });
     this.nodes.wf_tmpl = this;
@@ -253,7 +259,7 @@ module.exports.define("getDotGraph", function () {
     out += " graph [ penwidth=1 ]; ";
     out += " node [ fontname=Arial, fontsize=10, shape=box ]; ";
     out += " edge [ fontname=Arial, fontsize=10 ]; ";
-    query = module.exports_node.getQuery();
+    query = Data.entities.get("ac_wf_inst_node").getQuery();
     query.addCondition({
         column: "A.wf_inst",
         operator: "=",
@@ -264,7 +270,7 @@ module.exports.define("getDotGraph", function () {
     full_condition: "A.status <> 'K'",
     });        // exclude skipped
     while (query.next()) {
-        out += module.exports_node.getRow(query).getDotGraph();
+        out += Data.entities.get("ac_wf_inst_node").getRow(query).getDotGraph();
     }
     query.reset();
     out += " }";
@@ -306,7 +312,9 @@ module.exports.define("updateChildren", function (action) {
 
 
 module.exports.nodes.override("add", function (spec) {
-    var node = module.exports_node.clone(spec);
+    var node;
+    spec.skip_registration = true;
+    node = Data.entities.get("ac_wf_inst_node").clone(spec);
     Core.OrderedMap.add.call(this, node);
     return node;
 });
