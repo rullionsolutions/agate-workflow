@@ -26,7 +26,8 @@ module.exports = Data.Entity.clone({
     digest_text_string      : "ac.wf_digest",
     pack_condition   : "status IN ('A', 'P')",
     create_pending_nodes: false,
-    transitions      : Core.OrderedMap.clone({ id: "ac_wf_inst_node.transitions" })
+    transitions      : Core.OrderedMap.clone({ id: "ac_wf_inst_node.transitions" }),
+    data_volume_oom: 6,
 });
 
 
