@@ -30,7 +30,7 @@ module.exports.define("getCountURL", function () {
 
 module.exports.addFields([
     { id: "wf_tmpl"             , label: "Workflow Template"      , type: "Text"    , list_column: true, data_length: 25,
-        config_item: "wf_templates", url_pattern: "?page_id=sy_workflow_display&page_key={val}" },
+        collection_id: "wf_templates", url_pattern: "?page_id=sy_workflow_display&page_key={val}" },
     { id: "wf_tmpl_node"        , label: "WF Template Node"       , type: "Text"    , list_column: true, data_length: 80 },
     { id: "tasks_active"        , label: "Active Tasks"           , type: "Number"  , list_column: true, aggregation: "S",
         getURLFromVal: module.exports.getCountURL },
