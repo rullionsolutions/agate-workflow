@@ -35,7 +35,7 @@ module.exports.addFields([
     { id: "wf_inst"           , label: "Workflow Instance"    , type: "Reference", list_column: true, ref_entity: "ac_wf_inst" },
     { id: "id"                , label: "Id"                   , type: "Number"   , list_column: true, decimal_digits: 0, auto_generate: true },
     { id: "title"             , label: "Title"                , type: "Text"     , list_column: true, data_length: 255 },
-    { id: "page"              , label: "Page"                 , type: "Text"     , search_criterion: true, data_length: 40, config_item: "pages", css_reload: true, description: "Users are taken to this page when performing the step." },
+    { id: "page"              , label: "Page"                 , type: "Text"     , search_criterion: true, data_length: 40, collection_id: "pages", css_reload: true, description: "Users are taken to this page when performing the step." },
     { id: "status"            , label: "Status"               , type: "Option"   , editable: false, list_column: true, search_criterion: true, default_val: "P", list: "ac.node_status", description: "Records the status of this step. Progresses through pending, active, completed, skipped or frozen" },
     { id: "prev_node"         , label: "Previous Node"        , type: "Reference", editable: false, ref_entity: "ac_wf_inst_node" },
     { id: "outcome_id"        , label: "Outcome"              , type: "Text"     , data_length: 25 },

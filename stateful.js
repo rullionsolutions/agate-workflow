@@ -16,8 +16,8 @@ module.exports = Data.Entity.clone({
 
 
 module.exports.addFields([
-    { id: "entity_id"         , label: "Entity"               , type: "Text"     , data_length: 40, config_item: "entities" },
-    { id: "page_id"           , label: "Page"                 , type: "Text"     , data_length: 40, config_item: "pages" },
+    { id: "entity_id"         , label: "Entity"               , type: "Text"     , data_length: 40, collection_id: "entities" },
+    { id: "page_id"           , label: "Page"                 , type: "Text"     , data_length: 40, collection_id: "pages" },
     { id: "page_key"          , label: "Page Key"             , type: "Text"     , data_length: 40 },
     { id: "actor_id"          , label: "Actor"                , type: "Text"     , data_length: 80 },
     { id: "assigned_user"     , label: "Assigned User"        , type: "Reference", list_column: true, search_criterion: true, ref_entity: "ac_user", description: "The person responsible for carrying out this task." },
