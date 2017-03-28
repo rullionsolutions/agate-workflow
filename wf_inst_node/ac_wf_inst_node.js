@@ -166,7 +166,7 @@ module.exports.override("getTransRow", function (trans, action, key, addl_data) 
         wf_inst   : addl_data.wf_inst,
         tmpl_node_id: addl_data.tmpl_node_id
     });
-    row.messages = Data.MessageManagerRow.clone({ id: "row_" + row.row_number, row: row, prefix: (row.row_number === 0) ? "" : row.title });
+    row.messages = Data.MessageManagerRecord.clone({ id: "row_" + row.row_number, row: row, prefix: (row.row_number === 0) ? "" : row.title });
     return row;
 });
 
@@ -226,7 +226,7 @@ module.exports.define("createNextNodes", function (outcome_id) {
     if (!this.next_nodes && this.transitions) {
         this.next_nodes = [];
         this.transitions.each(function (tmpl_trans) {
-            this.debug(that, "Next node outcome_id:" + tmpl_trans.outcome_id + ", to_node_id: " + tmpl_trans.to_node_id);
+            that.debug(that, "Next node outcome_id:" + tmpl_trans.outcome_id + ", to_node_id: " + tmpl_trans.to_node_id);
             if (tmpl_trans.to_node_id && (!outcome_id || outcome_id === tmpl_trans.outcome_id)) {
                 that.next_nodes.push(that.createNextNode(tmpl_trans.to_node_id, tmpl_trans.outcome_id));
             }
