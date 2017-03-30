@@ -1,7 +1,7 @@
 "use strict";
 
 var UI = require("lazuli-ui/index.js");
-var Workflow = require("agate-workflow/index.js");
+var Core = require("lapis-core/index.js");
 
 
 module.exports = UI.Page.clone({
@@ -18,7 +18,7 @@ module.exports.sections.addAll([
 
 
 module.exports.defbind("setupEnd", "setupEnd", function () {
-    this.source_obj = Workflow.wf_templates.getThrowIfUnrecognized(this.page_key);
+    this.source_obj = Core.Collection.getCollection("wf_templates").getThrowIfUnrecognized(this.page_key);
     this.sections.get("dotg").fieldset.addField(
         { id: "graph", type: "DotGraph", label: "", editable: false }
     ).set(this.source_obj.getTemplateDotGraph());

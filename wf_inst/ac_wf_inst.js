@@ -17,6 +17,7 @@ module.exports = Data.Entity.clone({
     label_pattern   : "{title}",
     nodes           : Core.OrderedMap.clone({ id: "ac_wf_inst.nodes" }),
     actors          : Core.OrderedMap.clone({ id: "ac_wf_inst.actors" }),
+    data_volume_oom: 4,
 });
 
 
@@ -63,10 +64,10 @@ module.exports.override("getTransRow", function (trans, action, key, addl_data) 
 
     trans.row_number += 1;
     if (action === "C") {           // if creating a new wf_inst, addl_data is the template id
-        template = Workflow.wf_templates[addl_data];
+        template = Core.Collection.getCollection("wf_templates").get(addl_data);
     } else {                        // if loading an existing wf_inst, key is the key of the wf_inst
         row = this.getRow(key);
-        template = Workflow.wf_templates[row.getField("wf_tmpl").get()];
+        template = Core.Collection.getCollection("wf_templates").get(row.getField("wf_tmpl").get());
     }
     row = template.clone({
         id        : this.id,
@@ -78,7 +79,7 @@ module.exports.override("getTransRow", function (trans, action, key, addl_data) 
         id_prefix : "_" + row_number,
         action    : action
     });
-    row.messages = Data.MessageManagerRow.clone({ id: "row_" + row.row_number, row: row, prefix: (row.row_number === 0) ? "" : row.title });
+    row.messages = row.getMessageManager();
     return row;
 });
 
