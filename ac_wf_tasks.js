@@ -45,7 +45,7 @@ module.exports.defbind("setupEnd", "setupEnd", function () {
         section.columns.get( "due_date"    ).visible = true;
         section.rowURL = function (row_elem, row_obj) {
 //            var url = row_obj.getField("simple_url").get();
-            var url = "index.html?page_id=" + row_obj.getField("page").get() + "&page_key=" + row_obj.getField("page_key").get();
+            var url = "index.html#page_id=" + row_obj.getField("page").get() + "&page_key=" + row_obj.getField("page_key").get();
             if (section.owner.page.session.allowedURL(url)) {
                 row_elem.attribute("url", url);
             }

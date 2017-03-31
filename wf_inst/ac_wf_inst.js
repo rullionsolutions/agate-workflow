@@ -25,7 +25,7 @@ module.exports.addFields([
     { id: "id"            , label: "Id"               , type: "Number"   , editable: false, list_column: true, search_criterion: true, decimal_digits: 0, auto_generate: true },
     { id: "title"         , label: "Title"            , type: "Text"     , editable: false, data_length: 255, dscrptn : "The name given to this instance." },
     { id: "wf_tmpl"       , label: "Workflow Template", type: "Text"     , editable: false, list_column: true, search_criterion: true, data_length: 25,
-        config_item: "wf_templates", url_pattern: "?page_id=sy_workflow_display&page_key={val}" },
+        config_item: "wf_templates", url_pattern: "#page_id=sy_workflow_display&page_key={val}" },
     { id: "base_record"   , label: "Base Record"      , type: "Flex"     , editable: false, list_column: true, description: "The record to which this action relates, shown as record number and description." },
     { id: "entity"        , label: "Base Entity"      , type: "Text"     , editable: false, data_length: 25, collection_id: "entities", description : "The entity upon which this WF instance acts." },
     { id: "key_string"    , label: "Key String"       , type: "Text"     , editable: false, data_length: 255, description: "The key of the record upon which this WF instance acts." },

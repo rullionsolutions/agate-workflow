@@ -17,7 +17,7 @@ module.exports = Data.Entity.clone({
 module.exports.define("getCountURL", function () {
     var url;
     if (this.owner && this.owner.isKeyComplete()) {
-        url = "index.html?page_id=ac_wf_inst_node_search&page_button=url_search&status_0_filt=A" +
+        url = "index.html#page_id=ac_wf_inst_node_search&page_button=url_search&status_0_filt=A" +
             "&wf_tmpl_0_oper=EQ&wf_tmpl_0_filt="           + this.owner.getField("wf_tmpl"     ).get() +
             "&wf_tmpl_node_0_oper=EQ&wf_tmpl_node_0_filt=" + this.owner.getField("wf_tmpl_node").get();
         if (this.due_interval) {
@@ -30,7 +30,7 @@ module.exports.define("getCountURL", function () {
 
 module.exports.addFields([
     { id: "wf_tmpl"             , label: "Workflow Template"      , type: "Text"    , list_column: true, data_length: 25,
-        collection_id: "wf_templates", url_pattern: "?page_id=sy_workflow_display&page_key={val}" },
+        collection_id: "wf_templates", url_pattern: "#page_id=sy_workflow_display&page_key={val}" },
     { id: "wf_tmpl_node"        , label: "WF Template Node"       , type: "Text"    , list_column: true, data_length: 80 },
     { id: "tasks_active"        , label: "Active Tasks"           , type: "Number"  , list_column: true, aggregation: "S",
         getURLFromVal: module.exports.getCountURL },
