@@ -4,6 +4,8 @@ var Core = require("lapis-core/index.js");
 var Data = require("lazuli-data/index.js");
 var UI = require("lazuli-ui/index.js");
 
+require("agate-workflow/config.js");
+
 UI.sections.add(require("agate-workflow/WorkflowNode.js"));
 require("agate-workflow/sy_workflow_list.js");
 require("agate-workflow/sy_workflow_display.js");
