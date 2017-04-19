@@ -3,7 +3,7 @@
 var UI = require("lazuli-ui/index.js");
 
 
-module.exports = UI.Page.clone({
+module.exports = UI.SearchPage.clone({
     id              : "ac_wf_inst_search",
     entity_id       : "ac_wf_inst",
     title           : "Search for Workflow Instances",
