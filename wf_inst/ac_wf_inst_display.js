@@ -55,7 +55,7 @@ module.exports.sections.get("nodes").render = function (render_opts) {
 //        addButton(inner_elem,
 //            query.getColumn("A.status").get(),
 //            query.getColumn("A.title" ).get(),
-//            "?page_id=ac_wf_inst_node_display&page_key=" + query.getColumn("A._key").get());
+//            "#page_id=ac_wf_inst_node_display&page_key=" + query.getColumn("A._key").get());
         prev_seq = curr_seq;
     }
     query.reset();

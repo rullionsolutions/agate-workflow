@@ -81,7 +81,7 @@ module.exports.getField("simple_url").define("getComputed", function () {
         page = UI.pages.get(this.owner.getField("page").get());
     }
     if (page && this.owner.getField("attributes").isItem("OT") && !this.owner.getField("one_time_lock_code").isBlank()) {
-        out = "guest.html?page_id=" + page.id + "&page_key=" + this.owner.getField("page_key").get() + "&one_time_lock_code=" + this.owner.getField("one_time_lock_code").get();
+        out = "guest.html#page_id=" + page.id + "&page_key=" + this.owner.getField("page_key").get() + "&one_time_lock_code=" + this.owner.getField("one_time_lock_code").get();
     } else if (page) {
         out = page.getSimpleURL(this.owner.getField("page_key").get());
     }
@@ -586,7 +586,7 @@ module.exports.define("workflow_email_tokens", [
     "- {wf_step_title} = title of the workflow step, e.g. 'Approve / Reject this Job'",
     "- {wf_title}      = title of the workflow, usually the same as the title of the base record the workflow relates to, e.g. 'Sales Director'",
     "- {key}           = key string of the base record, useful to construct link URLs, e.g. '42'",
-    "- {wf_simple_url} = relative URL of the target task page, i.e. 'index.html?page_id=...&page_key=...', or if the step is using a 'one-time lock code', then it would begin 'guest.html'",
+    "- {wf_simple_url} = relative URL of the target task page, i.e. 'index.html#page_id=...&page_key=...', or if the step is using a 'one-time lock code', then it would begin 'guest.html'",
     "- {wf_due_date}   = due date of the task in the format 'dd/mm/yy', or 'n/a' if the date is blank"
 ]);
 
@@ -778,7 +778,7 @@ module.exports.define("getDotGraph", function () {
     if (hover_text) {
         out += " tooltip=\"" + hover_text + "\"";
     }
-    out += " URL=\"index.html?page_id=ac_wf_inst_node_display&page_key=" + this.getKey() + "\" ]; ";
+    out += " URL=\"index.html#page_id=ac_wf_inst_node_display&page_key=" + this.getKey() + "\" ]; ";
     if (!this.getField("prev_node").isBlank()) {
 //        out = "\"" + this.getField("prev_node").get() + ". " + this.getField("prev_node").getRow().getLabel("dotgraph") + "\" -> " +
         out += this.getField("prev_node").get() + " -> " + this.getKey() + " [ label=" + this.getField("outcome_id").get() + " ]; ";
