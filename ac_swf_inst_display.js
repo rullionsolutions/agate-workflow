@@ -6,7 +6,7 @@ var UI = require("lazuli-ui/index.js");
 module.exports = UI.Page.clone({
     id: "ac_swf_inst_display",
     area: "ac",
-    entity_id       : "ac_wf_inst",
+    entity_id: "ac_wf_inst",
     title: "Stateful Workflow Instance",
     requires_key: true,
 });
@@ -39,7 +39,7 @@ module.exports.defbind("showHideColumns", "setupEnd", function () {
 // });
 
 // UI.pages.get(ac_swf_tmpl_display).sections.get("nodes").defbind("showWorkflow", "render", function (render_opts) {
-//     var outer_elem = this.getSectionElement(render_opts).addChild("div");
+//     var outer_elem = this.getSectionElement(render_opts).makeElement("div");
 //     outer_elem.attr("class", "css_type_dotgraph");
-//     outer_elem.addChild("div", null, "css_disp").text(this.field.getTemplateDotGraph());
+//     outer_elem.makeElement("div", "css_disp").text(this.field.getTemplateDotGraph());
 // });

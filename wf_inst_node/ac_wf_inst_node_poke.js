@@ -74,7 +74,7 @@ Data.entities.get("ac_wf_inst_node").batchPoke.define("iteration", function () {
 
         if (params.node_checks === 2) {
             if (!session) {
-                session = Access.Session.clone({ user_id: "batch", });
+                session = Access.Session.getNewSession({ user_id: "batch", });
                 trans = session.getNewTrans();
             }
             session.newVisit(null, "batchPoke", params, "", params.page_key);

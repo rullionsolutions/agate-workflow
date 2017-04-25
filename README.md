@@ -1,2 +1,2 @@
 # agate-workflow
-Entity and Page objects for Workflow
+Persistent Entities for Workflows and Workflow Steps

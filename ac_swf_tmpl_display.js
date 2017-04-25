@@ -32,7 +32,7 @@ module.exports.defbind("getParameters", "updateAfterSections", function (params)
 
 
 module.exports.sections.get("nodes").defbind("showWorkflow", "render", function (render_opts) {
-    var outer_elem = this.getSectionElement(render_opts).addChild("div");
+    var outer_elem = this.getSectionElement(render_opts).makeElement("div");
     outer_elem.attr("class", "css_type_dotgraph");
-    outer_elem.addChild("div", null, "css_disp").text(this.field.getTemplateDotGraph());
+    outer_elem.makeElement("div", "css_disp").text(this.field.getTemplateDotGraph());
 });

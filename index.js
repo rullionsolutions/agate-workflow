@@ -5,6 +5,10 @@ var Data = require("lazuli-data/index.js");
 var UI = require("lazuli-ui/index.js");
 
 require("agate-workflow/config.js");
+require("agate-workflow/aug-lazuli-access/Session.js");
+require("agate-workflow/aug-agate-access/ac_user.js");
+
+Data.fields.add(Data.WorkflowState = require("agate-workflow/WorkflowState.js"));
 
 UI.sections.add(require("agate-workflow/WorkflowNode.js"));
 require("agate-workflow/sy_workflow_list.js");
@@ -41,7 +45,7 @@ require("agate-workflow/wf_inst_node/ac_wf_inst_node_skip.js");
 require("agate-workflow/wf_inst_node/ac_wf_inst_node_timer.js");
 require("agate-workflow/wf_inst_node/ac_wf_inst_node_timer_batch.js");
 
-require("agate-workflow/stateful.js");
+require("agate-workflow/swf_inst_node.js");
 require("agate-workflow/ac_swf_tmpl_display.js");
 require("agate-workflow/ac_swf_inst_display.js");
 require("agate-workflow/ac_wf_task_sum.js");
