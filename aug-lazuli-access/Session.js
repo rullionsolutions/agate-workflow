@@ -56,7 +56,7 @@ Access.Session.define("getPageTasks", function (page_id, key, callback) {
 * @param page_id, page_key
 * @return object containing the task's information, if found, or undefined
 */
-Access.Session.define("getPageTaskInfo", function (page_id, page_key) {
+Access.Session.reassign("getPageTaskInfo", function (page_id, page_key) {
     var out;
     this.getPageTasks(page_id, page_key, function (assigned_user, user_name, attributes,
             due_date, one_time_lock_code, inst_id, node_id, node_title) {
