@@ -41,23 +41,23 @@ module.exports.addFields([
     { id: "prev_node"         , label: "Previous Node"        , type: "Reference", editable: false, ref_entity: "ac_wf_inst_node" },
     { id: "outcome_id"        , label: "Outcome"              , type: "Text"     , data_length: 25 },
     { id: "actor_id"          , label: "Actor"                , type: "Text"     , data_length: 80 },
-    { id: "assigned_user"     , label: "Assigned User"        , type: "Reference", list_column: true, search_criterion: true, ref_entity: "ac_user", description: "The person responsible for carrying out this task." },
+    { id: "assigned_user"     , label: "Assigned User"        , type: "Reference", list_column: true, search_criterion: true, ref_entity: "ac_user", description: "The person responsible for carrying out this task" },
     { id: "asgn_user_name"    , label: "Assigned User Name"   , type: "Text"     , data_length: 80, editable: false },
-    { id: "page_key"          , label: "Page Key"             , type: "Text"     , data_length: 255, description: "Users are taken to this record when performing the step." },
-    { id: "simple_url"        , label: "Perform Task"         , type: "URL"      , list_column: true, description: "To perform this task, click the on the icon shown.", icon: "/cdn/Axialis/Png/16x16/Player Play.png", sql_function: "0" },
+    { id: "page_key"          , label: "Page Key"             , type: "Text"     , data_length: 255, description: "Users are taken to this record when performing the step" },
+    { id: "simple_url"        , label: "Perform Task"         , type: "InternalLink", list_column: true, description: "To perform this task, click the on the icon shown", sql_function: "0" },
     { id: "addl_url"          , label: "Additional URL"       , type: "Text"     , data_length: 255 },
     { id: "created_at"        , label: "Created At"           , type: "Reference", editable: false, ref_entity: "ac_tx" },
     { id: "activated_at"      , label: "Activated At"         , type: "Reference", editable: false, ref_entity: "ac_tx" },
     { id: "activated_on"      , label: "Activated On"         , type: "Date"     , editable: false, visible: false },
-    { id: "completed_at"      , label: "Completed At"         , type: "Reference", editable: false, ref_entity: "ac_tx", description: "The date the step was completed." },
-    { id: "completed_by"      , label: "Completed By"         , type: "Reference", editable: false, ref_entity: "ac_user", description: "The user that completed the step." },
+    { id: "completed_at"      , label: "Completed At"         , type: "Reference", editable: false, ref_entity: "ac_tx", description: "The date the step was completed" },
+    { id: "completed_by"      , label: "Completed By"         , type: "Reference", editable: false, ref_entity: "ac_user", description: "The user that completed the step" },
     { id: "wf_tmpl_node"      , label: "WF Template Node"     , type: "Text"     , data_length:  80, css_reload: true },
     { id: "icon"              , label: "Icon"                 , type: "Text"     , data_length: 255 },
     { id: "rmdr_date"         , label: "Reminder Date"        , type: "Date" },
     { id: "due_date"          , label: "Due Date"             , type: "Date" },
     { id: "attributes"        , label: "Attributes"           , type: "Attributes", list: "sy.node_attributes", css_reload: true },
     { id: "ntfcn_email"       , label: "Notification Email"   , type: "Reference" , editable: false, ref_entity: "ac_email", skip_reference_validation: true },
-    { id: "ntfcn_status"      , label: "Notification Status"  , type: "Attributes", description: "Records if activation, reminder , or due notifications have been sent.", list : "ac.node_ntfcn_status" },
+    { id: "ntfcn_status"      , label: "Notification Status"  , type: "Attributes", description: "Records if activation, reminder , or due notifications have been sent", list : "ac.node_ntfcn_status" },
     { id: "one_time_lock_code", label: "One Time Lock Code"   , type: "Text"      , /*editable: false,*/ data_length: 20, regex_pattern: "^.{20}$", regex_label: "Code must be 20 characters" }
 ]);
 
@@ -74,8 +74,8 @@ module.exports.define("indexes", [
 
 
 module.exports.getField("simple_url").define("getComputed", function () {
-    var page,
-        out = "";
+    var page;
+    var out = "";
 
     if (!this.owner.getField("page").isBlank()) {
         page = UI.pages.get(this.owner.getField("page").get());

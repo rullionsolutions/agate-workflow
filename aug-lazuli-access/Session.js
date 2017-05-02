@@ -22,7 +22,7 @@ Access.Session.define("getPageTasks", function (page_id, key, callback) {
     var ret;
     var sql = "SELECT SQL_CACHE assigned_user, asgn_user_name, attributes, due_date, " +
         "one_time_lock_code, wf_inst, id, title " +
-        "  FROM wf_inst_node " +
+        "  FROM ac_wf_inst_node " +
         " WHERE status='A' AND page = " + SQL.Connection.escape(page_id) +
         "   AND page_key" + (key ? " = " + SQL.Connection.escape(key) : " IS NULL");
 
@@ -139,7 +139,7 @@ Access.Session.reassign("allowedPageTask", function (page_id, page_key, allowed)
             ]);
         }
 
-        this.debug("allowedPageTask(): " + reason + ", " + text + ", " + attributes);
+        that.debug("allowedPageTask(): " + reason + ", " + text + ", " + attributes);
         return true;            // process all matching tasks
 //        return !allowed.task_found;
         // if task_found then no further processing is required
@@ -154,7 +154,7 @@ Access.Session.define("checkCompletedWorkflowTask", function (page_id, page_key,
     try {
         resultset = conn.executeQuery(
             "SELECT U.name, DATE_FORMAT(X.commit_point, '%d/%m/%y'), DATE_FORMAT(X.commit_point, '%H:%i')" +
-            "  FROM wf_inst_node N, ac_tx X, ac_user U" +
+            "  FROM ac_wf_inst_node N, ac_tx X, ac_user U" +
             " WHERE N.completed_at = X._key AND X.user_id = U._key AND N.status = 'C'" +
             "   AND N.page = " + SQL.Connection.escape(page_id) + " AND N.page_key = " + SQL.Connection.escape(page_key));
         if (resultset.next()) {
@@ -182,8 +182,8 @@ Access.Session.defbind("renderTasks", "render", function (spec) {
     };
     var sql =
         "SELECT SQL_CACHE I.page, I.page_key, I.title, S.title, I.due_date, LEFT(I.page, 2) AS module" +
-        "  FROM wf_inst_node I" +
-        " INNER JOIN wf_inst S ON S._key = I.wf_inst" +
+        "  FROM ac_wf_inst_node I" +
+        " INNER JOIN ac_wf_inst S ON S._key = I.wf_inst" +
         " WHERE I.status = 'A'" +
         "   AND INSTR(IFNULL(I.attributes, ''), 'ST') > 0" +
         "   AND (I.assigned_user = " + SQL.Connection.escape(this.user_id);
@@ -196,11 +196,16 @@ Access.Session.defbind("renderTasks", "render", function (spec) {
             ") AND (INSTR(IFNULL(I.attributes, ''), 'PD') = 0))";
     }
     sql += " ) ORDER BY I.page, I.due_date";
+    this.total_task_count = 0;
+    this.overdue_task_count = 0;
     try {
         resultset = conn.executeQuery(sql);
         while (resultset.next()) {
             this.renderTaskRecord(resultset, iter);
         }
+        main_elmt.makeElement("div", null, "css_max_display_tasks_header").text(String(this.max_display_tasks_header));
+        main_elmt.makeElement("div", null, "css_total_task_count").text(String(this.total_task_count));
+        main_elmt.makeElement("div", null, "css_overdue_task_count").text(String(this.overdue_task_count));
     } catch (e) {
         this.report(e);
     } finally {
@@ -209,31 +214,61 @@ Access.Session.defbind("renderTasks", "render", function (spec) {
 });
 
 
+Access.Session.define("max_display_tasks_header", 10);
+
 Access.Session.define("renderTaskRecord", function (resultset, iter) {
-    var css_class = "css_task";
-    var elmt_task;
+    var css_class = "css_task media";
     var page_id = SQL.Connection.getColumnString(resultset, 1);
     var page_key = SQL.Connection.getColumnString(resultset, 2);
     var step_title = SQL.Connection.getColumnString(resultset, 3);
     var inst_title = SQL.Connection.getColumnString(resultset, 4);
     var due_date = SQL.Connection.getColumnString(resultset, 5);
-    var module = SQL.Connection.getColumnString(resultset, 6);
+    // var module = SQL.Connection.getColumnString(resultset, 6);
     var page = UI.pages.getThrowIfUnrecognized(page_id);
+    var anchor_elmt;
+    var div_elmt;
 
-    if (iter.module !== module) {
-        this.renderTaskModule(iter, module);
-    }
-    if (iter.page_id !== page_id) {
-        this.renderTaskGroup(iter, page_id, step_title);
-    }
+    // if (iter.module !== module) {
+    //     this.renderTaskModule(iter, module);
+    // }
+    // if (iter.page_id !== page_id) {
+    //     this.renderTaskGroup(iter, page_id, step_title);
+    // }
+    this.total_task_count += 1;
     if (due_date && due_date < iter.today) {
+        this.overdue_task_count += 1;
         css_class += "_overdue";
     }
-    elmt_task = iter.elmt_task_group.makeElement("li", css_class).makeElement("a");
-    elmt_task.attr("href", page.getSimpleURL(page_key));
-    elmt_task.text(inst_title);
-});
+    if (this.total_task_count > this.max_display_tasks_header) {
+        return;
+    }
+    if (!iter.elmt_task_group) {
+        iter.elmt_task_group = iter.elmt_top;
+    }
+    anchor_elmt = iter.elmt_task_group.makeElement("li", css_class)
+        .makeElement("a");
+    anchor_elmt.attr("href", page.getSimpleURL(page_key));
 
+    anchor_elmt.makeElement("div", "media-left")
+        .makeElement("i", "fa fa-check fa-2x");
+
+    div_elmt = anchor_elmt.makeElement("div", "media-body");
+    div_elmt.makeElement("h6", "media-heading").text(step_title);
+    div_elmt.makeElement("p").text(inst_title);
+});
+/*
+
+                            <li class="media">
+                                <a href="javascript:;">
+                                    <div class="media-left"><img src="assets/img/user-2.jpg" class="media-object" alt="" /></div>
+                                    <div class="media-body">
+                                        <h6 class="media-heading">Olivia</h6>
+                                        <p>Quisque pulvinar tellus sit amet sem scelerisque tincidunt.</p>
+                                        <div class="text-muted f-s-11">35 minutes ago</div>
+                                    </div>
+                                </a>
+                            </li>
+*/
 
 Access.Session.define("renderTaskModule", function (iter, module) {
     iter.elmt_module = iter.elmt_top.makeElement("div", "css_menu_tasks", module);
@@ -242,23 +277,22 @@ Access.Session.define("renderTaskModule", function (iter, module) {
 
 
 Access.Session.define("renderTaskGroup", function (iter, page_id, step_title) {
-    // var li_elmt,
-    //      a_elmt;
-//    iter.elmt_task_group = iter.elmt_module.addChild("ul", null, "nav nav-list");
-//    iter.elmt_task_group.addChild("li", null, "nav-header", step_title);
+    var li_elmt = iter.elmt_module.makeElement("li", "dropdown");
+    var an_elmt = li_elmt.makeElement("a", null, page_id);
 
-    // li_elmt = iter.elmt_module.addChild("li", null, "dropdown-submenu");
-    //  a_elmt = li_elmt.addChild("a", page_id);
-    //  a_elmt.attribute("data-toggle", "dropdown");
-    //  a_elmt.attribute("href", "#");
-    //  a_elmt.addChild("i", null, "glyphicon glyphicon-ok");
-    //  a_elmt.addText(step_title);
-    // iter.elmt_task_group = li_elmt.addChild("ul", null, "dropdown-menu");
-    // iter.elmt_task_group.attribute("aria-labelledby", page_id);
+    an_elmt.attr("data-toggle", "dropdown");
+        // .attr("href", "#")
+    // an_elmt.makeElement("i", "fa fa-check fa-2x");
+    an_elmt.text(step_title);
 
-    iter.elmt_task_group = iter.elmt_module;            // no sub-level
-    iter.elmt_task_group.makeElement("li", "divider").attr("role", "separator");
-    iter.elmt_task_group.makeElement("li", "dropdown-header").text(step_title);
+    iter.elmt_task_group = li_elmt.makeElement("ul", "dropdown-menu animated fadeInLeft");
+    iter.elmt_task_group.attr("aria-labelledby", page_id);
+
+
+    // iter.elmt_task_group = iter.elmt_module;            // no sub-level
+    // iter.elmt_task_group.makeElement("li", "divider").attr("role", "separator");
+    // iter.elmt_task_group.makeElement("li", "dropdown-header").text(step_title);
+
     iter.page_id = page_id;
 });
 
