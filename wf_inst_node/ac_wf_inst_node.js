@@ -166,7 +166,7 @@ module.exports.override("getTransRow", function (trans, action, key, addl_data) 
         wf_inst   : addl_data.wf_inst,
         tmpl_node_id: addl_data.tmpl_node_id
     });
-    row.messages = Data.MessageManagerRecord.clone({ id: "row_" + row.row_number, row: row, prefix: (row.row_number === 0) ? "" : row.title });
+    row.messages = Data.MessageManagerRecord.clone({ id: "row_" + row.row_number, record: row, prefix: (row.row_number === 0) ? "" : row.title });
     return row;
 });
 

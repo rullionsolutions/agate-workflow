@@ -134,7 +134,7 @@ module.exports.define("setupWorkflow", function () {
     this.owner.defbind("updateWorkflowState_" + this.id, "presave", function (outcome_id) {
         var wf_field = this.getField(that.id);
         wf_field.presaveEntryPoint(outcome_id);
-        this.trans.defbind("checkWorkflowState_" + that.id, "beforeCommit", function () {
+        this.trans.defbind("checkWorkflowState_" + this.getKey() + "_" + that.id, "beforeCommit", function () {
             wf_field.checkWorkflowStateAfterSave();
         });
     });
