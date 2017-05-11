@@ -131,13 +131,10 @@ module.exports.define("setupWorkflow", function () {
     templates[this.wf_tmpl_id] = this;
 
     // by this point, the field should have an owner which is the Entity
-    this.owner.defbind("updateWorkflowState_" + this.id, "presave", function (outcome_id) {
-        var wf_field = this.getField(that.id);
-        wf_field.presaveEntryPoint(outcome_id);
-        this.trans.defbind("checkWorkflowState_" + this.getKey() + "_" + that.id, "beforeCommit", function () {
-            wf_field.checkWorkflowStateAfterSave();
-        });
-    });
+    // this.owner.defbind("updateWorkflowState_" + this.id, "presave", function (outcome_id) {
+    //     var wf_field = this.getField(that.id);
+    //     // wf_field.presaveEntryPoint(outcome_id);
+    // });
 });
 
 
@@ -221,9 +218,14 @@ module.exports.define("validateOnEntryNotification", function (notification) {
 
 module.exports.define("presaveEntryPoint", function (outcome_id) {
     var page_id = this.owner.trans.page && this.owner.trans.page.id;
+    var wf_field = this.owner.getField(this.id);
     this.orig_state_id = (this.owner.action === "C") ? "initial" : this.orig_val;
     this.debug("initial WF state: " + this.orig_state_id + ", at page: " + page_id);
     this.updateWorkflowState(page_id, outcome_id);
+
+    this.owner.trans.defbind("checkWorkflowState_" + this.id, "beforeCommit", function () {
+        wf_field.checkWorkflowStateAfterSave();
+    });
 });
 
 
@@ -233,6 +235,16 @@ module.exports.define("updateWorkflowState", function (page_id, outcome_id) {
         this.setCurrentTaskCompleted(page_id);
         this.performTransition(transition);
     } else if (this.orig_state_id === "initial") {
+        this.createNewWorkflow();
+        this.performTransitionToState("initial");
+    } else {
+        this.recheckCurrentState();
+    }
+});
+
+module.exports.define("presaveAction", function () {
+    this.orig_state_id = (this.owner.action === "C") ? "initial" : this.orig_val;
+    if (this.orig_state_id === "initial") {
         this.createNewWorkflow();
         this.performTransitionToState("initial");
     } else {
@@ -461,8 +473,10 @@ module.exports.define("refreshActiveNode", function (node_row, state_id) {
         }
     }
 
-    node_row.getField("rmdr_date").set(this.getReminderDate(activation_dt, transition));
-    node_row.getField("due_date").set(this.getDueDate(activation_dt, transition));
+    if (transition) {
+        node_row.getField("rmdr_date").set(this.getReminderDate(activation_dt, transition));
+        node_row.getField("due_date").set(this.getDueDate(activation_dt, transition));
+    }
     node_row.getField("wf_inst").getRow().getField("title").set(this.owner.getLabel("workflow_title"));
 });
 
@@ -472,7 +486,7 @@ module.exports.define("skipActiveNode", function (node_row) {
     if (node_row.getField("status").get() === "A") {
         node_row.getField("status").set("K");
         if (this.active_nodes && this.active_nodes.indexOf(node_row) > -1) {
-            this.active_nodes.splice(this.active_nodes.indexOf(node_row), 1);
+            // this.active_nodes.splice(this.active_nodes.indexOf(node_row), 1);
         }
     }
 });
