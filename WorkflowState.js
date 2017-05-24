@@ -194,6 +194,9 @@ module.exports.define("validatePageTransition", function (transition) {
     if (typeof transition.to_state_id !== "string" && typeof transition.outcomes !== "object") {
         this.throwError("either 'to_state_id' string property or 'outcomes' object property required for transition: " + JSON.stringify(transition));
     }
+    if (typeof transition.test_function === "string" && typeof this.owner[transition.test_function] !== "function") {
+        this.throwError("'test_function' string property does not reference a function property for transition: " + JSON.stringify(transition));
+    }
     if (typeof transition.change_action === "string" && typeof this.owner[transition.change_action] !== "function") {
         this.throwError("'change_action' string property does not reference a function property for transition: " + JSON.stringify(transition));
     }
@@ -496,7 +499,9 @@ module.exports.define("createNewNodes", function (wf_state) {
     var that = this;
     if (wf_state.page_transitions) {
         wf_state.page_transitions.forEach(function (transition) {
-            that.createNewNode(wf_state, transition);
+            if (!transition.test_function || that.owner[transition.test_function]()) {
+                that.createNewNode(wf_state, transition);
+            }
         });
     }
 });
