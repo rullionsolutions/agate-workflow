@@ -537,7 +537,8 @@ module.exports.define("createNewNode", function (wf_state, transition) {
         wf_inst: this.getWfInstRow(),
         tmpl_node_id: null,     // this is allowed to be null
     });
-    node_row.getField("wf_inst").set(this.getWfInstRow().getKey());
+    node_row.wf_inst = this.getWfInstRow();
+    node_row.getField("wf_inst").set(node_row.wf_inst.getKey());
     node_row.getField("seq_number").set(this.next_seq_number);
     this.next_seq_number += 1;
     this.debug("row: " + node_row.getKey() + ", next_seq_number: " + this.next_seq_number);

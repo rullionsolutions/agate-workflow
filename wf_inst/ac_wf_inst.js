@@ -56,7 +56,7 @@ module.exports.defbind("cloneNodesActors", "cloneType", function () {
     this.actors.wf_tmpl = this;
 });
 
-
+/*
 module.exports.override("getTransRow", function (trans, action, key, addl_data) {
     var row_number = trans.row_number,
         row,
@@ -82,7 +82,7 @@ module.exports.override("getTransRow", function (trans, action, key, addl_data) 
     row.messages = row.getMessageManager();
     return row;
 });
-
+*/
 
 module.exports.define("instantiate", function (trans, template_id, key) {
     var wf_inst_row,

@@ -130,7 +130,7 @@ module.exports.defbind("cloneTransitions", "cloneType", function () {
     this.transitions.wf_tmpl_node = this;
 });
 
-
+/*
 module.exports.override("getTransRow", function (trans, action, key, addl_data) {
     var row_number = trans.row_number,
         row,
@@ -169,11 +169,11 @@ module.exports.override("getTransRow", function (trans, action, key, addl_data) 
     row.messages = Data.MessageManagerRecord.clone({ id: "row_" + row.row_number, record: row, prefix: (row.row_number === 0) ? "" : row.title, instance: true, });
     return row;
 });
-
+*/
 
 module.exports.defbind("initCreate", "initCreate", function () {
     this.getField("created_at").set(this.trans.id);
-    this.getField("wf_inst"   ).set(this.wf_inst.getKey());
+    // this.getField("wf_inst"   ).set(this.wf_inst.getKey());
     this.setupNodeFromTemplate();
 });
 
