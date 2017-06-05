@@ -5,8 +5,7 @@ var UI = require("lazuli-ui/index.js");
 var SQL = require("lazuli-sql/index.js");
 var Data = require("lazuli-data/index.js");
 var Rhino = require("lazuli-rhino/index.js");
-
-var templates = {};
+var Workflow = require("agate-workflow/index.js");
 
 /**
  * To represent a Worflow
@@ -122,19 +121,7 @@ module.exports.define("setupWorkflow", function () {
     });
     this.sql_function += " ELSE 'error' END";
 
-    // needed only while we use ac_wf_inst and ac_wf_inst_node - for backward compatibility
-    this.wf_tmpl_id = "swf_" + this.id;         // 25 char limit
-    Data.entities.get("ac_wf_inst").templates[this.wf_tmpl_id] = Data.entities.get("ac_wf_inst");
-    if (templates[this.wf_tmpl_id]) {
-        this.throwError("swf field id already used: " + this.wf_tmpl_id);
-    }
-    templates[this.wf_tmpl_id] = this;
-
-    // by this point, the field should have an owner which is the Entity
-    // this.owner.defbind("updateWorkflowState_" + this.id, "presave", function (outcome_id) {
-    //     var wf_field = this.getField(that.id);
-    //     // wf_field.presaveEntryPoint(outcome_id);
-    // });
+    Workflow.wf_templates.add(this);
 });
 
 
@@ -408,6 +395,7 @@ module.exports.define("sendEntryNotifications", function (wf_state) {
 
 module.exports.define("forEachActiveNode", function (callback) {
     var query;
+    var temp_active_nodes;
     if (!this.active_nodes) {
         this.active_nodes = [];
         query = Data.entities.get("ac_wf_inst_node").getQuery();
@@ -426,7 +414,9 @@ module.exports.define("forEachActiveNode", function (callback) {
         }
         query.reset();
     }
-    this.active_nodes.forEach(function (node_row) {
+    // ensure iteration is unaffected by changes to active_nodes...
+    temp_active_nodes = this.active_nodes.slice(0);
+    temp_active_nodes.forEach(function (node_row) {
         callback(node_row);
     });
 });
@@ -510,8 +500,8 @@ module.exports.define("createNewNodes", function (wf_state) {
 module.exports.define("createNewWorkflow", function () {
     var flex;
     this.debug("createNewWorkflow()");
-    this.wf_inst_row = this.owner.trans.createNewRow("ac_wf_inst", this.wf_tmpl_id);
-    this.wf_inst_row.getField("wf_tmpl").set(this.wf_tmpl_id);
+    this.wf_inst_row = this.owner.trans.createNewRow("ac_wf_inst", this.id);
+    this.wf_inst_row.getField("wf_tmpl").set(this.id);
     this.wf_inst_row.getField("entity").set(this.owner.id);
     flex = this.wf_inst_row.getField("base_record");
     flex.reset({
@@ -589,7 +579,7 @@ module.exports.define("getWfInstRow", function () {
         query.addCondition({
             column: "A.wf_tmpl",
             operator: "=",
-            value: this.wf_tmpl_id,
+            value: this.id,
         });
         query.addCondition({
             column: "A.key_string",
@@ -691,7 +681,7 @@ module.exports.override("renderNavOptions", function (parent_elem, render_opts, 
     var ul_elem = this.renderDropdownDiv(parent_elem, "nav_" + this.getControl(), "Navigation options for this item");
     try {
         wf_inst_id = this.getWfInstRow().getKey();
-        ul_elem.addChild("li").addChild("a")
+        ul_elem.makeElement("li").makeElement("a")
             .attr("href", UI.pages.get("ac_swf_inst_display").getSimpleURL(wf_inst_id))
             .text("Show Instance");
         count += 1;
@@ -699,8 +689,8 @@ module.exports.override("renderNavOptions", function (parent_elem, render_opts, 
         this.report(e1);
     }
     try {
-        ul_elem.addChild("li").addChild("a")
-            .attr("href", UI.pages.get("ac_swf_tmpl_display").getSimpleURL() + "&wf_tmpl_id=" + this.wf_tmpl_id)
+        ul_elem.makeElement("li").makeElement("a")
+            .attr("href", UI.pages.get("sy_workflow_display").getSimpleURL(this.id))
             .text("Show Template");
         count += 1;
     } catch (e2) {

@@ -1,7 +1,7 @@
 "use strict";
 
 var UI = require("lazuli-ui/index.js");
-var Data = require("lazuli-data/index.js");
+var Workflow = require("agate-workflow/index.js");
 
 
 module.exports = UI.Page.clone({
@@ -25,7 +25,7 @@ module.exports.sections.addAll([
 
 
 module.exports.defbind("getParameters", "updateAfterSections", function (params) {
-    var field = Data.WorkflowState.templates[params.wf_tmpl_id];
+    var field = Workflow.wf_templates.getThrowIfUnrecognized(params.wf_tmpl_id);
     this.sections.get("nodes").field = field;
     this.full_title = this.title + ": " + field.label;
 });

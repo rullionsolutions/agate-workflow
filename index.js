@@ -9,8 +9,13 @@ require("agate-workflow/aug-lazuli-access/Session.js");
 require("agate-workflow/aug-agate-access/ac_user.js");
 
 Data.fields.add(Data.WorkflowState = require("agate-workflow/WorkflowState.js"));
+exports.wf_templates = Core.Collection.clone({
+    id: "wf_templates",
+    item_type: Data.WorkflowState,
+});
 
 UI.sections.add(require("agate-workflow/WorkflowNode.js"));
+
 require("agate-workflow/sy_workflow_list.js");
 require("agate-workflow/sy_workflow_display.js");
 
@@ -21,12 +26,6 @@ require("agate-workflow/wf_inst/ac_wf_inst_freeze.js");
 require("agate-workflow/wf_inst/ac_wf_inst_search.js");
 require("agate-workflow/wf_inst/ac_wf_inst_skip.js");
 require("agate-workflow/wf_inst/ac_wf_inst_unfreeze.js");
-
-
-exports.sections = Core.Collection.clone({
-    id: "wf_templates",
-    item_type: Data.entities.get("ac_wf_inst"),
-});
 
 require("agate-workflow/wf_inst_node/ac_wf_inst_node.js");
 require("agate-workflow/wf_inst_node/ac_wf_inst_node_add.js");
