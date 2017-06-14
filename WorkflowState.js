@@ -172,6 +172,7 @@ module.exports.define("validatePageTransition", function (transition) {
     if (typeof transition.page_id !== "string") {
         this.throwError("'page_id' string property required for transition: " + JSON.stringify(transition));
     }
+    UI.pages.getThrowIfUnrecognized(transition.page_id).addWorkflowState(this, transition);
     if (typeof transition.actor_id !== "string" && transition.actor_id) {
         this.throwError("'actor_id' string property required for transition: " + JSON.stringify(transition));
     }

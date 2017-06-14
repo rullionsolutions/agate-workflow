@@ -6,6 +6,7 @@ var UI = require("lazuli-ui/index.js");
 
 require("agate-workflow/config.js");
 require("agate-workflow/aug-lazuli-access/Session.js");
+require("agate-workflow/aug-lazuli-ui/Page.js");
 require("agate-workflow/aug-agate-access/ac_user.js");
 
 Data.fields.add(Data.WorkflowState = require("agate-workflow/WorkflowState.js"));
