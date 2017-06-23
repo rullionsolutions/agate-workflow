@@ -214,7 +214,7 @@ Access.Session.defbind("renderTasks", "render", function (spec) {
 });
 
 
-Access.Session.define("max_display_tasks_header", 10);
+Access.Session.define("max_display_tasks_header", 6);
 
 Access.Session.define("renderTaskRecord", function (resultset, iter) {
     var css_class = "css_task media";
