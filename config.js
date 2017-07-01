@@ -9,3 +9,14 @@ Rhino.App.defbind("workflow_loadData", "build", function () {
     // SQL.Connection.loadSQLFile(IO.File.getModulePath(module) + "/wf_inst/build.sql");
     SQL.Connection.shared.loadSQLFile(IO.File.getModulePath(module) + "/wf_inst_node/build.sql");
 });
+
+
+
+module.exports.sections.add({
+    id: "tasks",
+    type: "HomePageSection",
+    title: "Tasks",
+    text: "Actions assigned to you that require your attention",
+    glyphicon: "icon-ok",
+    section_heading_page_id: "ac_wf_tasks",
+});
