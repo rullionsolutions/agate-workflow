@@ -3,6 +3,7 @@
 var SQL = require("lazuli-sql/index.js");
 var IO = require("lazuli-io/index.js");
 var Rhino = require("lazuli-rhino/index.js");
+var UI = require("lazuli-ui/index.js");
 
 
 Rhino.App.defbind("workflow_loadData", "build", function () {
@@ -11,8 +12,7 @@ Rhino.App.defbind("workflow_loadData", "build", function () {
 });
 
 
-
-module.exports.sections.add({
+UI.pages.get("home").sections.add({
     id: "tasks",
     type: "HomePageSection",
     title: "Tasks",
